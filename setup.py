@@ -1,7 +1,4 @@
-#!/usr/bin/env python
-# -*- coding: utf-8 -*-
-
-"""The setup script."""
+""""The setup script."""
 
 from setuptools import setup, find_packages
 
@@ -18,7 +15,7 @@ setup_requirements = ['pytest-runner', ]
 test_requirements = ['pytest', ]
 
 setup(
-    author="AssemblyAI robot",
+    author="AssemblyAI",
     author_email='robot@assemblyai.com',
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',

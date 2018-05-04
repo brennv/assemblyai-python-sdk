@@ -5,7 +5,7 @@ Credits
 Development Lead
 ----------------
 
-* AssemblyAI robot <robot@assemblyai.com>
+* AssemblyAI <robot@assemblyai.com>
 
 Contributors
 ------------
