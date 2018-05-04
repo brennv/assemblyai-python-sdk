@@ -6,26 +6,24 @@ assemblyai-python-sdk
 .. image:: https://img.shields.io/pypi/v/assemblyai.svg
         :target: https://pypi.python.org/pypi/assemblyai
 
-.. image:: https://img.shields.io/travis/assemblyai/assemblyai.svg
-        :target: https://travis-ci.org/assemblyai/assemblyai
+.. image:: https://img.shields.io/travis/AssemblyAI/assemblyai-python-sdk.svg
+        :target: https://travis-ci.org/AssemblyAI/assemblyai-python-sdk
 
-.. image:: https://readthedocs.org/projects/assemblyai/badge/?version=latest
-        :target: https://assemblyai.readthedocs.io/en/latest/?badge=latest
+.. image:: https://readthedocs.org/projects/assemblyai-python-sdk/badge/?version=latest
+        :target: https://assemblyai-python-sdk.readthedocs.io/en/latest/?badge=latest
         :alt: Documentation Status
-
-
         Copyright (c) 2018, AssemblyAI
-.. image:: https://pyup.io/repos/github/assemblyai/assemblyai-python-sdk/shield.svg
-     :target: https://pyup.io/repos/github/assemblyai/assemblyai-python-sdk/
-     :alt: Updates
 
+.. image:: https://pyup.io/repos/github/AssemblyAI/assemblyai-python-sdk/shield.svg
+     :target: https://pyup.io/repos/github/AssemblyAI/assemblyai-python-sdk/
+     :alt: Updates
 
 
 Python package for AssemblyAI
 
 
 * Free software: MIT license
-* Documentation: https://assemblyai.readthedocs.io.
+* Documentation: https://assemblyai-python-sdk.readthedocs.io.
 
 
 Features
