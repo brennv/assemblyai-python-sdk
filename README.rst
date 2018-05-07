@@ -27,12 +27,10 @@ Quickstart
     import assemblyai
 
     aai = assemblyai.Client(token='your-secret-token')
-
-    audio_url = 'https://example.com/sample.wav'
-    transcript = aai.transcribe(audio_url)
+    transcript = aai.transcribe('https://example.com/sample.wav')
 
     while transcript['status'] not in ['completed', 'error']:
-        transcript = aai.transcribe()
+        transcript = aai.poll()
 
     print(transcript)
 
