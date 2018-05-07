@@ -19,3 +19,9 @@ History
 ------------------
 
 * Update metadata.
+
+
+0.1.3 (2018-05-07)
+------------------
+
+* Add poll method.

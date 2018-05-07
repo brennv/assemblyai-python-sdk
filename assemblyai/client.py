@@ -49,3 +49,22 @@ class Client(object):
                 time.sleep(1)
         logging.debug('Transcript %s %s' % (id, status))
         return self.transcript
+
+    def poll(self):
+        """Request a transcript."""
+        url = self.api + '/transcript'
+        if not self.transcript:
+            id, status = None, None
+            pass  # TODO raise error
+        elif self.transcript['status'] in ['completed', 'error']:
+            id, status = self.transcript['id'], self.transcript['status']
+            pass
+        else:
+            url += '/' + str(self.transcript['id'])
+            response = requests.get(url, headers=self.headers)
+            self.transcript = response.json()['transcript']
+            id, status = self.transcript['id'], self.transcript['status']
+            if status not in ['completed', 'error']:
+                time.sleep(1)
+        logging.debug('Transcript %s %s' % (id, status))
+        return self.transcript

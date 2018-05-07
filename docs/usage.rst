@@ -10,8 +10,8 @@ To use assemblyai in a project::
 
     audio_url = 'https://example.com/sample.wav'
     transcript = aai.transcribe(audio_url)
-    
+
     while transcript['status'] not in ['completed', 'error']:
-        transcript = aai.transcribe()
+        transcript = aai.poll()
 
     print(transcript)
