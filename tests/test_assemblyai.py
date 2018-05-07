@@ -4,7 +4,7 @@ import pytest
 
 from click.testing import CliRunner
 
-from assemblyai import assemblyai
+from assemblyai import Client
 from assemblyai import cli
 
 
