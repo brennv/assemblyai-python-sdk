@@ -1,42 +1,51 @@
-"""Main module."""
+"""Client module."""
 
 import json
 import logging
+import os
+import time
 
 import requests
 
-from assemblyai.exceptions import ParseResponseError
+# from assemblyai.exceptions import ParseResponseError
 
 
 # LOG = logging.getLogger(__name__)
 
 
-transcript_url = "https://api.assemblyai.com/v1/transcript"
-
-
 class Client(object):
     """Make calls to the AssemblyAI API."""
 
-    def __init__(self, token):
+    def __init__(self, token=None):
         """Initialize client."""
         self.token = token
+        if not self.token:
+            self.token = os.environ.get('ASSEMBLYAI_TOKEN')
+        # TODO validate token
+        if not self.token:
+            pass  # TODO raise auth error
+        self.headers = {'authorization': self.token}
+        self.api = "https://api.assemblyai.com"
         self.transcript = None
 
-    def transcribe(self, audio_url):
+    def transcribe(self, audio_url=None):
         """Request a transcript."""
-        data = {"audio_src_url": audio_url}
-        payload = json.dumps(data)
-        headers = {'authorization': self.token}
-        self.transcript = requests.post(transcript_url, data=payload,
-                                        headers=headers)
-        return self.transcript
-
-    def check(self, transcript_id=None):
-        """Check on a transcript."""
-        if self.transcript:
-            headers = {'authorization': self.token}
-            url = transcript_url + '/' + self.transcript.id
-            self.transcript = requests.get(url, headers=headers)
-            return self.transcript
+        url = self.api + '/transcript'
+        if not self.transcript:
+            data = {"audio_src_url": audio_url}
+            payload = json.dumps(data)
+            response = requests.post(url, data=payload, headers=self.headers)
+            self.transcript = response.json()['transcript']
+            id, status = self.transcript['id'], self.transcript['status']
+        elif self.transcript['status'] in ['completed', 'error']:
+            id, status = self.transcript['id'], self.transcript['status']
+            pass
         else:
-            
+            url += '/' + str(self.transcript['id'])
+            response = requests.get(url, headers=self.headers)
+            self.transcript = response.json()['transcript']
+            id, status = self.transcript['id'], self.transcript['status']
+            if status not in ['completed', 'error']:
+                time.sleep(1)
+        logging.debug('Transcript %s %s' % (id, status))
+        return self.transcript

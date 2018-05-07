@@ -19,22 +19,28 @@ assemblyai-python-sdk
      :alt: Updates
 
 
-Python package for AssemblyAI
+Python wrapper for the AssemblyAI API
 
-
-* Free software: MIT license
 * Documentation: https://assemblyai-python-sdk.readthedocs.io.
+
+
+Quickstart
+----------
+
+    import assemblyai
+
+    aai = assemblyai.Client(token='your-secret-token')
+    
+    audio_url = 'https://example.com/sample.wav'
+    transcript = aai.transcribe(audio_url)
+
+    while transcript['status'] not in ['completed', 'error']:
+        transcript = aai.transcribe()
+
+    print(transcript)
 
 
 Features
 --------
 
-* TODO
-
-Credits
--------
-
-This package was created with Cookiecutter_ and the `audreyr/cookiecutter-pypackage`_ project template.
-
-.. _Cookiecutter: https://github.com/audreyr/cookiecutter
-.. _`audreyr/cookiecutter-pypackage`: https://github.com/audreyr/cookiecutter-pypackage
+* Transcribe audio into text
