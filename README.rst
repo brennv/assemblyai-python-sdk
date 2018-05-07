@@ -11,12 +11,9 @@ assemblyai-python-sdk
 
 .. image:: https://readthedocs.org/projects/assemblyai-python-sdk/badge/?version=latest
         :target: https://assemblyai-python-sdk.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
-        Copyright (c) 2018, AssemblyAI
 
 .. image:: https://pyup.io/repos/github/AssemblyAI/assemblyai-python-sdk/shield.svg
      :target: https://pyup.io/repos/github/AssemblyAI/assemblyai-python-sdk/
-     :alt: Updates
 
 
 Python wrapper for the AssemblyAI API
@@ -30,7 +27,7 @@ Quickstart
     import assemblyai
 
     aai = assemblyai.Client(token='your-secret-token')
-    
+
     audio_url = 'https://example.com/sample.wav'
     transcript = aai.transcribe(audio_url)
 
