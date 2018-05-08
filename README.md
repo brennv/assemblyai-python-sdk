@@ -65,4 +65,33 @@ while transcript.status != 'completed':
 text = transcript.text
 ```
 
-Initially, models take six minutes to train, but afterwords they can be invoked by ID.
+
+## Model and Transcript attributes
+
+Initially, models take six minutes to train, after which they can be invoked by ID.
+
+```python
+model = assemblyai.Model(id=model_id)
+```
+
+Prior transcripts can also be called by ID.
+
+```python
+transcript = assemblyai.Transcript(id=transcript_id)
+```
+
+To inspect additional attributes, like `transcript.confidence` try:
+
+```Python
+help(model)
+help(transcript)
+```
+
+Or inspect the raw API responses using:
+
+```Python
+model.dict
+transcript.dict
+```
+
+For additional background see: https://docs.assemblyai.com
