@@ -7,10 +7,16 @@
 
 Transcribe audio into text. Create custom language models for higher accuracy.
 
-- Prerequisite: Obtain an API token from https://assemblyai.com
-- Documentation: https://assemblyai-python-sdk.readthedocs.io.
+- Documentation: https://assemblyai-python-sdk.readthedocs.io
 - Issues: https://github.com/assemblyai/assemblyai-python-sdk
 
+## Getting started
+
+Obtain an API token from https://assemblyai.com and run pip install.
+
+```shell
+pip install -U assemblyai
+```
 
 ## Quickstart
 
