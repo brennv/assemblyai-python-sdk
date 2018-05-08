@@ -71,13 +71,13 @@ text = transcript.text
 Initially, models take six minutes to train, after which they can be invoked by ID.
 
 ```python
-model = assemblyai.Model(id=model_id)
+model = aai.model(id=model_id)
 ```
 
 Prior transcripts can also be called by ID.
 
 ```python
-transcript = assemblyai.Transcript(id=transcript_id)
+transcript = aai.transcript(id=transcript_id)
 ```
 
 To inspect additional attributes, like `transcript.confidence` try:
