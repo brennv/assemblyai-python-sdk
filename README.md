@@ -9,6 +9,9 @@ Transcribe audio into text. Create custom language models for higher accuracy.
 
 - Documentation: https://assemblyai-python-sdk.readthedocs.io
 - Issues: https://github.com/assemblyai/assemblyai-python-sdk
+- Support: https://assemblyai.com
+- Community: https://assemblyaicommunity.slack.com
+
 
 ## Getting started
 
