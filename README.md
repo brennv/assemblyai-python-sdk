@@ -7,18 +7,21 @@
 
 Transcribe audio into text. Create custom language models for higher accuracy.
 
+- Prerequisite: Obtain an API token from https://assemblyai.com
 - Documentation: https://assemblyai-python-sdk.readthedocs.io.
+- Issues: https://github.com/assemblyai/assemblyai-python-sdk
+
 
 ## Quickstart
 
 ```python
 import assemblyai
 
-aai = assemblyai.Client(token='your-secret-token')
+aai = assemblyai.Client(token='secret-token')
 
 transcript = aai.transcribe('https://example.com/sample.wav')
 
-while transcript.status is not 'completed':
+while transcript.status != 'completed':
     transcript = transcript.get()
 
 text = transcript.text
@@ -33,13 +36,13 @@ The quickstart example transcribes audio using a generic English language model.
 
 In order to retain accuracy with unique word sets, create a custom language model.
 
-For this example we'll train a new model using Pokemon characters from Wikipedia.
+For this example we'll train a new model using a list of phrases from wikipedia.
 
 ```python
 import assemblyai
 import wikipedia
 
-aai = assemblyai.Client(token='your-secret-token')
+aai = assemblyai.Client(token='secret-token')
 
 phrases = wikipedia.page("Pokemon characters").content.split('. ')
 
@@ -47,7 +50,7 @@ model = aai.train(phrases)
 
 transcript = aai.transcribe('https://example.com/pokemon.wav', model=model)
 
-while transcript.status is not 'completed':
+while transcript.status != 'completed':
     transcript = transcript.get()
 
 text = transcript.text

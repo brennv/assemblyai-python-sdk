@@ -2,34 +2,12 @@
 
 import json
 import logging
-import os
-import time
 
 import requests
 
-from assemblyai.exceptions import ParseResponseError
-
-API = os.environ.get('ASSEMBLY_URL', 'https://api.assemblyai.com')
-
-
-def handle_warnings(response, object):
-    """Handle  warnings and exceptions."""
-    warning = None
-    if response.status_code >= 400 and response.status_code < 500:
-        msg = 'Authentication error'
-        raise ParseResponseError(msg)
-    if response.status_code >= 500:
-        msg = 'Server error'
-        raise ParseResponseError(msg)
-    if response:
-        response = response.json()[object]
-    if 'warning' in response:
-        warning = response['warning']
-        logging.warning('Warning: %s' % warning)
-    if response['status'] is 'error':
-        msg = response['error']
-        raise ParseResponseError(msg)
-    return warning
+from assemblyai.config import ASSEMBLY_URL, ASSEMBLY_TOKEN
+from assemblyai.exceptions import handle_warnings
+from assemblyai.token import trial_token, validate_token
 
 
 class Model(object):
@@ -48,20 +26,18 @@ class Model(object):
     def __repr__(self):
         return 'Model(id=%s, status=%s)' % (self.id, self.status)
 
-    def get(self, wait=1):
+    def get(self):
         """Get a language model."""
         if not self.id:
             # TODO raise error if not self.id
             pass
-        url = API + '/model/' + str(self.id)
+        url = ASSEMBLY_URL + '/model/' + str(self.id)
         response = requests.get(url, headers=self.headers)
         self.warning = handle_warnings(response, 'model')
         response = response.json()['model']
         self.dict = response
         self.status = response['status']
         logging.debug('Model %s %s' % (self.id, self.status))
-        if self.status not in ['completed', 'error']:
-            time.sleep(wait)
         return self
 
 
@@ -92,18 +68,18 @@ class Transcript(object):
         data = {}
         if self.model and self.model['status'] not in ['trained', 'error']:
             self.model = self.model.get()
-        if self.model and self.model['status'] is 'trained':
+        if self.model and self.model['status'] == 'trained':
             data['model_id'] = self.model.id
         if not self.id and self.audio_url:
             self = self.create(audio_url=self.audio_url)
         elif self.id:
-            url = API + '/transcript/' + str(self.id)
+            url = ASSEMBLY_URL + '/transcript/' + str(self.id)
             response = requests.get(url, headers=self.headers)
             self.warning = handle_warnings(response, 'transcript')
             response = response.json()['transcript']
             self.dict = response
             self.id, self.status = response['id'], response['status']
-            # if self.status is 'completed':
+            # if self.status == 'completed':
             self.text_raw = response['text']
             self.text = response['text_formatted']
             self.confidece = response['confidence']
@@ -116,16 +92,12 @@ class Transcript(object):
 class Client(object):
     """Client for the AssemblyAI API."""
 
-    def __init__(self, token=None):
+    def __init__(self, token=None, email=None):
         """Initialize client."""
-        self.token = token
-        if not self.token:
-            self.token = os.environ.get('ASSEMBLY_TOKEN')
-        # TODO validate token
-        if not self.token:
-            pass  # TODO raise auth error
+        self.token = token or ASSEMBLY_TOKEN  # or trial_token()
+        # validate_token(self.token)
         self.headers = {'authorization': self.token}
-        self.api = API
+        self.api = ASSEMBLY_URL
         self.model = Model(self.headers)
         self.transcript = Transcript(self.headers)
 
@@ -142,7 +114,7 @@ class Client(object):
         if closed_domain:
             data['closed_domain'] = closed_domain
         payload = json.dumps(data)
-        url = API + '/model'
+        url = ASSEMBLY_URL + '/model'
         response = requests.post(url, data=payload, headers=self.headers)
         self.model.warning = handle_warnings(response, 'model')
         response = response.json()['model']
@@ -154,9 +126,9 @@ class Client(object):
         """Create a transcript request. If the transcript depends on a
         custom language model, defer creation until model is trained."""
         data = {}
-        if model and model.status is 'trained':
+        if model and model.status == 'trained':
             data['model_id'] = model.id
-        elif model and model.status is 'error':
+        elif model and model.status == 'error':
             raise model.error
         elif model and model.status not in ['trained', 'error']:
             pass
@@ -164,7 +136,7 @@ class Client(object):
             data["audio_src_url"] = audio_url or self.audio_url
             # TODO raise error if not audio_url
             payload = json.dumps(data)
-            url = API + '/transcript'
+            url = ASSEMBLY_URL + '/transcript'
             response = requests.post(url, data=payload, headers=self.headers)
             self.warning = handle_warnings(response, 'transcript')
             response = response.json()['transcript']
