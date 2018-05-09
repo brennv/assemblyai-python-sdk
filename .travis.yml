@@ -9,7 +9,7 @@ env:
   global:
     - secure: nvNZKwMD2xgZhG3Qo5310bbBhsIhSsewFbczSZSFr5utEcfGYAGur6dfEIAeECKtcUk20eRX/KXTedxdv7zIx+39jnOjmLkYes9Qi/paHXGnxH0DI0PHDdAzwKtqhh+rnrFOk/OK/y5ypyF5z5KvrrItLx2aKmBIw19lHPks3CmxW659QQ1uX0dFQihUALKNaB5SqYfAxQ9aV7FVaBWlLig21uPx2cZoJ9ikS6RxP27peUJPZgePeU2dnYVLKgsaTL8NwuzNKNOJCtdSlAxanLbeMwvyxHxUnVGT1t2LzEHfG6EJANVKh8IDl0wMlLunjpeLpbIgKlyPM2kGqhoKGSoqh8uxSmggfJlLWwiBAdFJOkfC2Avt63q8K17LD7LvoIiAMHznzzvgVEPSx8nW7jlzmfCKnGeytiYHSbBoDe4YxusWhoETof2+4gxum22tzrt/IEgFawHa5BcBdw9tKuGKtMJpTnwXlxJlGU1sDOJdgpeSGxADw3Us+v460KzrSd1MGEOwhD7cbl9GHdI/LaVJfcGOp9kPICXPcXQIk+hvu0nJCkmMQ1Uojhhn+rygBSGsHUDAU7/CV6DRrghh+frYv4QHhjrwseNsmst27J+EPP3bBW0tF2ousv8/GWKFN/g7mEq/UHeSekgSU73Ni0nGJHpG8sPExcqe3jMMUXU=
 
-install: pip install -U tox-travis
+install: pip install -U tox-travis codecov
 
 script: tox
 
@@ -25,4 +25,4 @@ deploy:
     python: 3.6
 
 after_success:
-  - bash < (curl -s https://codecov.io/bash)
+  - codecov
