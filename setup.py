@@ -9,8 +9,9 @@ with open('HISTORY.rst') as history_file:
     history = history_file.read()
 
 requirements = [
-    'Click>=6.0',
+    'click>=6.7',
     'requests>=2.18.4',
+    'wikipedia>=1.4.0',
 ]
 
 setup_requirements = [
