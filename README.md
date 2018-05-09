@@ -84,26 +84,44 @@ transcript = aai.transcribe('https://example.com/pokemon.wav', model=model)
 
 ## Model and Transcript attributes
 
-Initially, models take six minutes to train, after which they can be invoked by ID.
+Prior models and transcripts can by called by ID.
 
 ```python
-model = aai.model(id=model_id)
+model = aai.model.get(id=<id>)
+transcript = aai.transcript.get(id=<id>)
 ```
 
-Prior transcripts can also be called by ID.
-
-```python
-transcript = aai.transcript(id=transcript_id)
-```
-
-To inspect additional attributes, like `transcript.confidence` try:
+To inspect additional attributes, use `props()`:
 
 ```Python
-help(model)
-help(transcript)
+model.props()
+
+>>> ['headers',
+>>>  'id',
+>>>  'status',
+>>>  'name',
+>>>  'phrases',
+>>>  'closed_domain',
+>>>  'warning',
+>>>  'dict']
+
+transcript.props()
+
+>>> ['headers',
+>>>  'id',
+>>>  'audio_url',
+>>>  'model',
+>>>  'status',
+>>>  'warning',
+>>>  'text',
+>>>  'text_raw',
+>>>  'confidence',
+>>>  'segments',
+>>>  'speaker_count',
+>>>  'dict']
 ```
 
-Or inspect the raw API responses using:
+The `dict` attribute contains the raw API response:
 
 ```Python
 model.dict

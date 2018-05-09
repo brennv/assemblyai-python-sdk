@@ -67,20 +67,40 @@ For this example, we create a model using a list of words/sentences found on a w
 Model and Transcript attributes
 -------------------------------
 
-Initially, models take six minutes to train, after which they can be invoked by ID.
+Prior models and transcripts can by called by ID.
 
-    model = aai.model(id=model_id)
+    model = aai.model.get(id=<id>)
+    transcript = aai.transcript.get(id=<id>)
 
-Prior transcripts can also be called by ID.
+To inspect additional attributes, use `props()`:
 
-    transcript = aai.transcript(id=transcript_id)
+    model.props()
 
-To inspect additional attributes, like `transcript.confidence` try:
+    >>> ['headers',
+    >>>  'id',
+    >>>  'status',
+    >>>  'name',
+    >>>  'phrases',
+    >>>  'closed_domain',
+    >>>  'warning',
+    >>>  'dict']
 
-    help(model)
-    help(transcript)
+    transcript.props()
 
-Or inspect the raw API responses using:
+    >>> ['headers',
+    >>>  'id',
+    >>>  'audio_url',
+    >>>  'model',
+    >>>  'status',
+    >>>  'warning',
+    >>>  'text',
+    >>>  'text_raw',
+    >>>  'confidence',
+    >>>  'segments',
+    >>>  'speaker_count',
+    >>>  'dict']
+
+The `dict` attribute contains the raw API response:
 
     model.dict
     transcript.dict
