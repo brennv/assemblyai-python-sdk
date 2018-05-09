@@ -114,6 +114,9 @@ class Transcript(object):
         logging.debug('Transcript %s %s' % (self.id, self.status))
         return self
 
+    def props(self):
+        return [i for i in self.__dict__.keys() if i[:1] != '_']
+
 
 class Client(object):
     """Client for the AssemblyAI API."""
