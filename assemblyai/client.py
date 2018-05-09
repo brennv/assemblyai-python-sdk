@@ -5,7 +5,7 @@ import logging
 
 import requests
 
-from assemblyai.config import ASSEMBLY_URL, ASSEMBLY_TOKEN
+from assemblyai.config import ASSEMBLYAI_URL, ASSEMBLYAI_TOKEN
 from assemblyai.exceptions import handle_warnings
 # from assemblyai.token import trial_token, validate_token
 
@@ -31,7 +31,7 @@ class Model(object):
         if not self.id:
             # TODO raise error if not self.id
             pass
-        url = ASSEMBLY_URL + '/model/' + str(self.id)
+        url = ASSEMBLYAI_URL + '/model/' + str(self.id)
         response = requests.get(url, headers=self.headers)
         self.warning = handle_warnings(response, 'model')
         response = response.json()['model']
@@ -75,7 +75,7 @@ class Transcript(object):
         if not self.id and self.audio_url and not self.model:
             self = self.create(audio_url=self.audio_url)
         elif self.id:
-            url = ASSEMBLY_URL + '/transcript/' + str(self.id)
+            url = ASSEMBLYAI_URL + '/transcript/' + str(self.id)
             response = requests.get(url, headers=self.headers)
             self.warning = handle_warnings(response, 'transcript')
             response = response.json()['transcript']
@@ -96,10 +96,10 @@ class Client(object):
 
     def __init__(self, token=None, email=None):
         """Initialize client."""
-        self.token = token or ASSEMBLY_TOKEN  # or trial_token()
+        self.token = token or ASSEMBLYAI_TOKEN  # or trial_token()
         # validate_token(self.token)
         self.headers = {'authorization': self.token}
-        self.api = ASSEMBLY_URL
+        self.api = ASSEMBLYAI_URL
         self.model = Model(self.headers)
         self.transcript = Transcript(self.headers)
 
@@ -116,7 +116,7 @@ class Client(object):
         if closed_domain:
             data['closed_domain'] = closed_domain
         payload = json.dumps(data)
-        url = ASSEMBLY_URL + '/model'
+        url = ASSEMBLYAI_URL + '/model'
         response = requests.post(url, data=payload, headers=self.headers)
         self.model.warning = handle_warnings(response, 'model')
         response = response.json()['model']
@@ -138,7 +138,7 @@ class Client(object):
             data["audio_src_url"] = audio_url or self.audio_url
             # TODO raise error if not audio_url
             payload = json.dumps(data)
-            url = ASSEMBLY_URL + '/transcript'
+            url = ASSEMBLYAI_URL + '/transcript'
             response = requests.post(url, data=payload, headers=self.headers)
             self.warning = handle_warnings(response, 'transcript')
             response = response.json()['transcript']

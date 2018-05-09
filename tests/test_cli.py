@@ -9,8 +9,8 @@ from click.testing import CliRunner
 from assemblyai import cli
 
 
-ASSEMBLY_URL = os.environ.get('ASSEMBLY_URL', 'https://api.assemblyai.com')
-ASSEMBLY_TOKEN = os.environ.get('ASSEMBLY_TOKEN')
+ASSEMBLYAI_URL = os.environ.get('ASSEMBLYAI_URL', 'https://api.assemblyai.com')
+ASSEMBLYAI_TOKEN = os.environ.get('ASSEMBLYAI_TOKEN')
 AUDIO_URL = 'https://s3-us-west-2.amazonaws.com/assemblyai.prooflab/office_nine_degrees.wav'
 
 
