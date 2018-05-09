@@ -3,17 +3,16 @@
 import json
 import logging
 
-import requests
-
 from assemblyai.config import ASSEMBLYAI_URL, ASSEMBLYAI_TOKEN
 from assemblyai.exceptions import handle_warnings
 # from assemblyai.token import trial_token, validate_token
+import requests
 
 
 class Model(object):
     """Language model object."""
 
-    def __init__(self, headers, id=None):
+    def __init__(self, headers):
         self.headers = headers
         self.id = id
         self.status = None
@@ -26,11 +25,16 @@ class Model(object):
     def __repr__(self):
         return 'Model(id=%s, status=%s)' % (self.id, self.status)
 
-    def get(self):
+    def get(self, id=None):
         """Get a language model."""
-        if not self.id:
-            # TODO raise error if not self.id
-            pass
+        if id:
+            self.id = id
+            self.status = None
+            self.name = None
+            self.phrases = None
+            self.closed_domain = None
+            self.warning = None
+            self.dict = None
         url = ASSEMBLYAI_URL + '/model/' + str(self.id)
         response = requests.get(url, headers=self.headers)
         self.warning = handle_warnings(response, 'model')
@@ -40,18 +44,21 @@ class Model(object):
         logging.debug('Model %s %s' % (self.id, self.status))
         return self
 
+    def props(self):
+        return [i for i in self.__dict__.keys() if i[:1] != '_']
+
 
 class Transcript(object):
     """Transcript object."""
 
-    def __init__(self, headers, id=None):
+    def __init__(self, headers, audio_url=None, model=None):
         self.headers = headers
-        self.id = id
+        self.id = None
+        self.audio_url = audio_url
+        self.model = model
         self.status = None
         self.audio_url = None
-        self.model_id = None
         self.warning = None
-        self.model = None
         self.text = None
         self.text_raw = None
         self.confidence = None
@@ -63,17 +70,34 @@ class Transcript(object):
         return 'Transcript(id=%s, status=%s, text=%s)' % (
             self.id, self.status, self.text)
 
-    def get(self):
+    def get(self, id=None):
         """Get a transcript."""
+        if id:
+            self.id = id
+            self.status = None
+            self.audio_url = None
+            self.warning = None
+            self.model = None
+            self.text = None
+            self.text_raw = None
+            self.confidence = None
+            self.segments = None
+            self.speaker_count = None
+            self.dict = None
         data = {}
-        if self.model and self.model['status'] not in ['trained', 'error']:
+        if self.model and self.model.status not in ['trained', 'error']:
+            # Check for model updates if it's in training
             self.model = self.model.get()
-        if self.model and self.model['status'] == 'trained':
+            if self.model.status not in ['trained', 'error']:
+                self.status = 'waiting for model'
+        if self.model and self.model.status == 'trained':
             data['model_id'] = self.model.id
+            # Request a transcript if the model is trained
             if not self.id and self.audio_url:
                 self = self.create(audio_url=self.audio_url, model=self.model)
-        if not self.id and self.audio_url and not self.model:
-            self = self.create(audio_url=self.audio_url)
+        # if not self.id and self.audio_url and not self.model:
+        #     # Create a transcript in case transcribe was skipped
+        #     self = self.create(audio_url=self.audio_url)
         elif self.id:
             url = ASSEMBLYAI_URL + '/transcript/' + str(self.id)
             response = requests.get(url, headers=self.headers)
@@ -128,12 +152,13 @@ class Client(object):
         """Create a transcript request. If the transcript depends on a
         custom language model, defer creation until model is trained."""
         data = {}
+        self.transcript = Transcript(self.headers, audio_url, model)
         if model and model.status == 'trained':
             data['model_id'] = model.id
         elif model and model.status == 'error':
-            raise model.error
+            raise model.error  # FIXME
         elif model and model.status not in ['trained', 'error']:
-            pass
+            self.transcript.status = 'waiting for model'
         else:
             data["audio_src_url"] = audio_url or self.audio_url
             # TODO raise error if not audio_url
