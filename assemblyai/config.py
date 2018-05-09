@@ -1,3 +1,5 @@
+"""Configs."""
+
 import os
 
 

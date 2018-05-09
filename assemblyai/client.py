@@ -7,7 +7,7 @@ import requests
 
 from assemblyai.config import ASSEMBLY_URL, ASSEMBLY_TOKEN
 from assemblyai.exceptions import handle_warnings
-from assemblyai.token import trial_token, validate_token
+# from assemblyai.token import trial_token, validate_token
 
 
 class Model(object):
@@ -70,7 +70,9 @@ class Transcript(object):
             self.model = self.model.get()
         if self.model and self.model['status'] == 'trained':
             data['model_id'] = self.model.id
-        if not self.id and self.audio_url:
+            if not self.id and self.audio_url:
+                self = self.create(audio_url=self.audio_url, model=self.model)
+        if not self.id and self.audio_url and not self.model:
             self = self.create(audio_url=self.audio_url)
         elif self.id:
             url = ASSEMBLY_URL + '/transcript/' + str(self.id)
