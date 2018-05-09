@@ -25,20 +25,26 @@ pip install -U assemblyai
 
 ## Quickstart
 
+Start transcribing:
+
 ```python
 import assemblyai
 
 aai = assemblyai.Client(token='your-secret-api-token')
 
 transcript = aai.transcribe('https://example.com/sample.wav')
+```
 
+Get the completed transcript. Transcripts take about half the duration of the
+audio to complete.
+
+```python
 while transcript.status != 'completed':
     transcript = transcript.get()
 
 text = transcript.text
 ```
 
-Transcripts take about half the duration of the audio to complete.
 
 
 ## Custom language models
