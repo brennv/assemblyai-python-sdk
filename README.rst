@@ -24,7 +24,7 @@ Quickstart
 
     import assemblyai
 
-    aai = assemblyai.Client(token='secret-token')
+    aai = assemblyai.Client(token='your-secret-api-token')
 
     transcript = aai.transcribe('https://example.com/sample.wav')
 
@@ -49,7 +49,7 @@ For this example, we create a model using a list of words/sentences found on a w
     import assemblyai
     import wikipedia
 
-    aai = assemblyai.Client(token='secret-token')
+    aai = assemblyai.Client(token='your-secret-api-token')
 
     phrases = wikipedia.page("Pokemon characters").content.split('\n')
 
