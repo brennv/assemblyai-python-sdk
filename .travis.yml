@@ -24,3 +24,6 @@ deploy:
     tags: true
     repo: AssemblyAI/assemblyai-python-sdk
     python: 3.6
+
+after_success:
+  - bash < (curl -s https://codecov.io/bash)

@@ -10,12 +10,17 @@ with open('HISTORY.rst') as history_file:
 
 requirements = [
     'Click>=6.0',
-    'requests>=2.18.4'
+    'requests>=2.18.4',
 ]
 
-setup_requirements = ['pytest-runner', ]
+setup_requirements = [
+    'pytest-runner',
+    'pytest-cov',
+]
 
-test_requirements = ['pytest', ]
+test_requirements = [
+    'pytest',
+]
 
 setup(
     author="AssemblyAI",
