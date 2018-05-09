@@ -54,7 +54,7 @@ class Transcript(object):
         self.model = None
         self.text = None
         self.text_raw = None
-        self.confidece = None
+        self.confidence = None
         self.segments = None
         self.speaker_count = None
         self.dict = None
@@ -84,7 +84,7 @@ class Transcript(object):
             # if self.status == 'completed':
             self.text_raw = response['text']
             self.text = response['text_formatted']
-            self.confidece = response['confidence']
+            self.confidence = response['confidence']
             self.segments = response['segments']
             self.speaker_count = response['speaker_count']
         logging.debug('Transcript %s %s' % (self.id, self.status))
