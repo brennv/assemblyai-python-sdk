@@ -46,14 +46,15 @@ text = transcript.text
 ```
 
 
+## Custom models
 
-## Custom language models
+The quickstart example transcribes audio using a generic English model.
 
-The quickstart example transcribes audio using a generic English language model.
-
-In order to retain accuracy with unique word sets, create a custom language model.
+In order to retain accuracy with unique word sets, create a custom model.
 
 For this example, we create a model using a list of words/sentences found on a wikipedia page.
+
+Create the custom model.
 
 ```python
 import assemblyai
@@ -61,16 +62,23 @@ import wikipedia
 
 aai = assemblyai.Client(token='your-secret-api-token')
 
-phrases = wikipedia.page("List of Pokemon characters").content.split('. ') 
+phrases = wikipedia.page("List of Pokemon characters").content.split('. ')
 
 model = aai.train(phrases)
+```
 
+Check to see that the model has finished training -- models take about six
+minutes to complete.
+
+```Python
+while model.status != 'trained':
+    model = model.get()
+```
+
+Reference the model when creating a transcript.
+
+```python
 transcript = aai.transcribe('https://example.com/pokemon.wav', model=model)
-
-while transcript.status != 'completed':
-    transcript = transcript.get()
-
-text = transcript.text
 ```
 
 
