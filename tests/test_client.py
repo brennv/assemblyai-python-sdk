@@ -6,6 +6,7 @@ import pytest
 
 from assemblyai import Client
 from assemblyai.exceptions import ClientAuthError
+import wikipedia
 
 
 ASSEMBLYAI_URL = os.environ.get('ASSEMBLYAI_URL', 'https://api.assemblyai.com')
@@ -30,6 +31,8 @@ def test_client_transcribe():
         transcript = transcript.get()
     assert transcript.status == 'completed'
     assert transcript_id == transcript.id
+    transcript = transcript.get(id=transcript_id)
+    assert transcript_id == transcript.id
 
 
 def test_client_train():
@@ -39,7 +42,6 @@ def test_client_train():
     assert model.status == 'training'
     model_id = model.id
     model = model.get()
-    # assert model.status == 'queued'
     assert model_id == model.id
 
 
@@ -50,9 +52,11 @@ def test_client_train_transcribe():
     assert model.status == 'training'
     model_id = model.id
     model = model.get()
-    # assert model.status == 'queued'
+    assert model_id == model.id
+    model = model.get(id=model_id)
     assert model_id == model.id
     transcript = aai.transcribe(AUDIO_URL, model=model)
     assert transcript.id is None
     transcript = transcript.get()
     assert transcript.id is None
+    assert transcript.status == 'waiting for model'
