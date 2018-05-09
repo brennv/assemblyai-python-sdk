@@ -55,7 +55,7 @@ import wikipedia
 
 aai = assemblyai.Client(token='secret-token')
 
-phrases = wikipedia.page("Pokemon characters").content.split('\n')
+phrases = wikipedia.page("List of Pokemon characters").content.split('. ') 
 
 model = aai.train(phrases)
 
