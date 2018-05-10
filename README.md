@@ -20,7 +20,7 @@ Transcribe audio into text. Recognize made-up words and boost accuracy using cus
 Run pip install and get an API token from https://assemblyai.com
 
 ```shell
-pip install -U assemblyai
+pip install assemblyai
 ```
 
 

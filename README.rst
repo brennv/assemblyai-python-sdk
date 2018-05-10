@@ -16,7 +16,7 @@ Getting started
 
 Run pip install and get an API token from https://assemblyai.com
 
-    pip install -U assemblyai
+    pip install assemblyai
 
 
 Quickstart
