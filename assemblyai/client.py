@@ -25,8 +25,7 @@ class Model(object):
     def __repr__(self):
         return 'Model(id=%s, status=%s)' % (self.id, self.status)
 
-    def get(self, id=None):
-        """Get a language model."""
+    def reset(self, id=None):
         if id:
             self.id = id
             self.status = None
@@ -35,6 +34,10 @@ class Model(object):
             self.closed_domain = None
             self.warning = None
             self.dict = None
+
+    def get(self, id=None):
+        """Get a language model."""
+        self.reset(id)
         url = ASSEMBLYAI_URL + '/model/' + str(self.id)
         response = requests.get(url, headers=self.headers)
         self.warning = handle_warnings(response, 'model')
@@ -70,8 +73,7 @@ class Transcript(object):
         return 'Transcript(id=%s, status=%s, text=%s)' % (
             self.id, self.status, self.text)
 
-    def get(self, id=None):
-        """Get a transcript."""
+    def reset(self, id=None):
         if id:
             self.id = id
             self.status = None
@@ -84,6 +86,10 @@ class Transcript(object):
             self.segments = None
             self.speaker_count = None
             self.dict = None
+
+    def get(self, id=None):
+        """Get a transcript."""
+        self.reset(id)
         data = {}
         if self.model and self.model.status not in ['trained', 'error']:
             # Check for model updates if it's in training
@@ -151,27 +157,33 @@ class Client(object):
         logging.debug('Model %s %s' % (self.model.id, self.model.status))
         return self.model
 
+    def create_transcript(self, data):
+        payload = json.dumps(data)
+        url = ASSEMBLYAI_URL + '/transcript'
+        response = requests.post(url, data=payload, headers=self.headers)
+        self.warning = handle_warnings(response, 'transcript')
+        response = response.json()['transcript']
+        self.transcript.id = response['id']
+        self.transcript.status = response['status']
+        logging.debug('Transcript %s %s' % (
+            self.transcript.id, self.transcript.status))
+        return self.transcript
+
     def transcribe(self, audio_url, model=None):
         """Create a transcript request. If the transcript depends on a
         custom language model, defer creation until model is trained."""
         data = {}
+        data["audio_src_url"] = audio_url
         self.transcript = Transcript(self.headers, audio_url, model)
-        if model and model.status == 'trained':
-            data['model_id'] = model.id
-        elif model and model.status == 'error':
-            raise model.error  # FIXME
-        elif model and model.status not in ['trained', 'error']:
-            self.transcript.status = 'waiting for model'
+        # TODO remove model checking after api defaults to waiting for models
+        if model:
+            if model.status == 'trained':
+                data['model_id'] = model.id
+                self.transcript = self.create_transcript(data)
+            elif model.status == 'error':
+                raise model.error
+            elif model.status not in ['trained', 'error']:
+                self.transcript.status = 'waiting for model'
         else:
-            data["audio_src_url"] = audio_url or self.audio_url
-            # TODO raise error if not audio_url
-            payload = json.dumps(data)
-            url = ASSEMBLYAI_URL + '/transcript'
-            response = requests.post(url, data=payload, headers=self.headers)
-            self.warning = handle_warnings(response, 'transcript')
-            response = response.json()['transcript']
-            self.transcript.id = response['id']
-            self.transcript.status = response['status']
-            logging.debug('Transcript %s %s' % (
-                self.transcript.id, self.transcript.status))
+            self.transcript = self.create_transcript(data)
         return self.transcript
