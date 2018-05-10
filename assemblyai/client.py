@@ -121,8 +121,6 @@ class Transcript(object):
             url = ASSEMBLYAI_URL + '/transcript'
             response = requests.post(url, data=payload, headers=self.headers)
             self.warning = handle_warnings(response, 'transcript')
-            logging.warning(response.status_code)
-            logging.warning(response.json())
             response = response.json()['transcript']
             self.id, self.status = response['id'], response['status']
             logging.debug('Transcript %s %s' % (self.id, self.status))
@@ -169,7 +167,6 @@ class Client(object):
         self.api = ASSEMBLYAI_URL
         self.model = None
         self.transcript = None
-        logging.warning(self.__dict__)
 
     def __repr__(self):
         return 'Client(token=%s)' % self.token[0:8] + '...'
