@@ -5,8 +5,8 @@ import os
 import pytest
 
 from assemblyai import Client
-from assemblyai.exceptions import ClientAuthError
-import wikipedia
+from assemblyai.exceptions import ClientError
+# import wikipedia
 
 
 ASSEMBLYAI_URL = os.environ.get('ASSEMBLYAI_URL', 'https://api.assemblyai.com')
@@ -16,7 +16,7 @@ AUDIO_URL = 'https://s3-us-west-2.amazonaws.com/assemblyai.prooflab/office_nine_
 
 def test_client_auth_error():
     """Test client without token throws auth error."""
-    with pytest.raises(ClientAuthError):
+    with pytest.raises(ClientError):
         aai = Client(token='foobar')
         aai.transcribe(AUDIO_URL)
 

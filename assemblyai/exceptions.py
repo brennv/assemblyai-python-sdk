@@ -7,11 +7,11 @@ def handle_warnings(response, object):
     """Handle  warnings and exceptions."""
     warning = None
     if response.status_code >= 400 and response.status_code < 500:
-        msg = 'API token missing/invalid.'
-        raise ClientAuthError(msg)
+        msg = response.json()
+        raise ClientError(msg)
     if response.status_code >= 500:
         msg = 'Server error, developers have been alerted.'
-        raise ClientError(msg)
+        raise ServerError(msg)
     if response:
         response = response.json()[object]
     if 'warning' in response:
@@ -19,7 +19,7 @@ def handle_warnings(response, object):
         logging.warning('Warning: %s' % warning)
     if response['status'] == 'error':
         msg = response['error']
-        raise ClientError(msg)
+        raise ServerError(msg)
     return warning
 
 
@@ -27,5 +27,5 @@ class ClientError(Exception):
     pass
 
 
-class ClientAuthError(Exception):
+class ServerError(Exception):
     pass
