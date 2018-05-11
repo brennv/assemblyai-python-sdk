@@ -71,7 +71,7 @@ class Transcript(object):
         self.model = self.model.get()
         if self.model.status == 'trained' and not self.id:
             self = self.create()
-        else:
+        elif self.model.status != 'trained':
             self.status = 'waiting for model'
 
     def get(self, id=None):
@@ -79,7 +79,7 @@ class Transcript(object):
         self.reset(id)
         if self.model:
             self.check_model()
-        elif self.id:
+        if self.id:
             url = self.api + '/transcript/' + str(self.id)
             response = requests.get(url, headers=self.headers)
             self.warning = handle_warnings(response, 'transcript')
