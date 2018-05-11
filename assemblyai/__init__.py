@@ -2,6 +2,6 @@
 
 __author__ = """AssemblyAI"""
 __email__ = 'robot@assemblyai.com'
-__version__ = '0.1.11'
+__version__ = '0.1.12'
 
 from .client import Client

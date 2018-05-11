@@ -56,6 +56,6 @@ setup(
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/assemblyai/assemblyai-python-sdk',
-    version='0.1.11',
+    version='0.1.12',
     zip_safe=False,
 )
